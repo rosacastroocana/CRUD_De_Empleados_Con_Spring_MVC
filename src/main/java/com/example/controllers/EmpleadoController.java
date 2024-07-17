@@ -1,5 +1,9 @@
 package com.example.controllers;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -11,6 +15,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.entities.Departamento;
 import com.example.entities.Empleado;
@@ -75,7 +81,41 @@ public class EmpleadoController {
     @PostMapping("/persistirEmpleado")
 
 // El nombre de este metodo no se usa, lo que se usa es lo que va en PostMapping que va con el de la url
-    public String persistir(@ModelAttribute Empleado empleado) {
+// la foto no viene como una propiedad sino como un parametro: @RequestParam(imagen) imagen es como lo hemos llamado en el formulario
+
+public String persistir(@ModelAttribute Empleado empleado,
+    @RequestParam(name= "imagen", required = false) MultipartFile archivoDeImagen) {
+    
+    // Si la imagen no está vacia:
+        
+        if(!archivoDeImagen.isEmpty()) {
+
+        // La ruta relativa de la carpeta donde se va a almacenar la foto (en path: java.nio.file)
+        // interfaz singular y la clase que la implmenta en plural.
+           Path rutaRelativa = Paths.get("src\\main\\resources\\static\\imagenes\\"); 
+           
+        // Ruta absoluta (la de windows)
+            String rutaAbsoluta = rutaRelativa.toFile().getAbsolutePath();
+
+        // Y la ruta completa, hay un metodo que te da el nombre original del fichero (getOriginalFilename)
+            Path rutaCompleta = Paths.get(rutaAbsoluta + "\\" + archivoDeImagen.getOriginalFilename());   
+        
+        // Manejar la imagen (archivoDeImagen). Quick Fix y Sourround en archivoDeImagen. En Files de java.nio
+            try {
+                byte[] archivoDeImagenEnBytes = archivoDeImagen.getBytes();
+                Files.write(rutaCompleta, archivoDeImagenEnBytes);
+
+                // Establecer (setter) el  nombre de la imagen recibida a la propiedad foto del empleado
+                empleado.setFoto(archivoDeImagen.getOriginalFilename());
+                
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+    
+    
+    }
+        
         empleadoService.persistirUpdateEmpleado(empleado);
 
         return "redirect:/empleado/all";

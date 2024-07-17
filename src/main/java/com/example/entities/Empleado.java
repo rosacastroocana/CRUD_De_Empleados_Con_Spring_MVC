@@ -42,14 +42,16 @@ public class Empleado implements Serializable {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate fechaAlta;
 
-    // Relación con Departamento
-    //Un Empleado trabaja en un solo Departamento
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Departamento departamento;
-
   // Para que se guarde el nombre en vez del ordinal, sino sería un número  
     @Enumerated(EnumType.STRING)
     private Genero genero;    
-    
+ 
+  // no se puede llamar imagen porque ya se ha llamado así en la vista
+    private String foto;
+
+    // Relación con Departamento
+    //Un Empleado trabaja en un solo Departamento
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Departamento departamento;
+
 }
