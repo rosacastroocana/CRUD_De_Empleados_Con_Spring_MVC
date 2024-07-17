@@ -45,7 +45,7 @@ public class Empleado implements Serializable {
     // Relación con Departamento
     //Un Empleado trabaja en un solo Departamento
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Departamento departamento;
 
   // Para que se guarde el nombre en vez del ordinal, sino sería un número  

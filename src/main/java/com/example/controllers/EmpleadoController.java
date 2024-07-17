@@ -31,7 +31,7 @@ public class EmpleadoController {
 
     private static final Logger LOG = Logger.getLogger("EmpleadoController");
 // No se puede modificar porque es final y la hemos hecho estática porque no hace falta crear un objeto para poderla usar
-// porque LOG vive en el plano de a clase para poder usarlo.
+// porque LOG vive en el plano de la clase para poder usarlo.
 
     // Inyectar como dependencia la capa de servicio:
     private final EmpleadoService empleadoService;
@@ -98,5 +98,15 @@ public class EmpleadoController {
         return "altaModificacionEmpleado";
 
     }
+
+
+// Metodo para eliminar un empleado
+@GetMapping("/eliminarEmpleado/{id}")
+public String deleteEmpleado(@PathVariable(name ="id") int idEmpleado) {
+     
+        empleadoService.deleteEmpleado(idEmpleado);
+
+    return "redirect:/empleado/all";
+    }    
 
 }
